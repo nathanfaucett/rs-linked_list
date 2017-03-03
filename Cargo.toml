@@ -1,0 +1,14 @@
+[package]
+name = "linked_list"
+version = "0.1.0"
+authors = ["nathanfaucett <nathanfaucett@gmail.com>"]
+
+keywords = ["linked", "list", "doubly"]
+description = "doubly linked list"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/nathanfaucett/rs-linked_list.git"
+homepage = "https://github.com/nathanfaucett/rs-linked_list"
+
+[dependencies]
+collection_traits = {git = "https://github.com/nathanfaucett/rs-collection_traits"}
