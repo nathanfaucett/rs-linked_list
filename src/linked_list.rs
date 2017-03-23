@@ -60,7 +60,7 @@ impl<T> LinkedList<T> {
 
             match self.head {
                 None => self.tail = node,
-                Some(head) => (**head).prev = node,
+                Some(head) => (*(*head as *mut Node<T>)).prev = node,
             }
 
             self.head = node;
@@ -70,12 +70,12 @@ impl<T> LinkedList<T> {
     #[inline]
     fn pop_front_node(&mut self) -> Option<Box<Node<T>>> {
         self.head.map(|node| unsafe {
-            let node = Box::from_raw(*node);
+            let node = Box::from_raw(*node as *mut Node<T>);
             self.head = node.next;
 
             match self.head {
                 None => self.tail = None,
-                Some(head) => (**head).prev = None,
+                Some(head) => (*(*head as *mut Node<T>)).prev = None,
             }
 
             self.len -= 1;
@@ -91,7 +91,7 @@ impl<T> LinkedList<T> {
 
             match self.tail {
                 None => self.head = node,
-                Some(tail) => (**tail).next = node,
+                Some(tail) => (*(*tail as *mut Node<T>)).next = node,
             }
 
             self.tail = node;
@@ -101,12 +101,12 @@ impl<T> LinkedList<T> {
     #[inline]
     fn pop_back_node(&mut self) -> Option<Box<Node<T>>> {
         self.tail.map(|node| unsafe {
-            let node = Box::from_raw(*node);
+            let node = Box::from_raw(*node as *mut Node<T>);
             self.tail = node.prev;
 
             match self.tail {
                 None => self.head = None,
-                Some(tail) => (**tail).next = None,
+                Some(tail) => (*(*tail as *mut Node<T>)).next = None,
             }
 
             self.len -= 1;
@@ -195,7 +195,7 @@ impl<T> LinkedList<T> {
     pub fn get_mut(&mut self, index: usize) -> Option<&mut T> {
         assert!(index < self.len);
         unsafe {
-            self.find_node_mut(index).map(|node| &mut (**node).element)
+            self.find_node_mut(index).map(|node| &mut (*(*node as *mut Node<T>)).element)
         }
     }
 }
@@ -260,8 +260,8 @@ impl<T> Insert<usize, T> for LinkedList<T> {
                 node.prev = Some(prev);
 
                 let node = Some(Shared::new(Box::into_raw(node)));
-                (**prev).next = node;
-                (**next).prev = node;
+                (*(*prev as *mut Node<T>)).next = node;
+                (*(*next as *mut Node<T>)).prev = node;
 
                 self.len += 1;
             }
@@ -286,10 +286,10 @@ impl<T> Remove<usize> for LinkedList<T> {
                 let prev = self.find_node_mut(index - 1).expect("failed to find prev node");
                 let node = (**prev).next.expect("failed to find node");
                 let next = (**node).next.expect("failed to find next node");
-                (**prev).next = Some(next);
-                (**next).prev = Some(prev);
+                (*(*prev as *mut Node<T>)).next = Some(next);
+                (*(*next as *mut Node<T>)).prev = Some(prev);
                 self.len -= 1;
-                Box::from_raw(*node).into_element()
+                Box::from_raw(*node as *mut Node<T>).into_element()
             }
         }
     }
@@ -322,11 +322,11 @@ impl<T> Deque<T> for LinkedList<T> {
     }
     #[inline(always)]
     fn front_mut(&mut self) -> Option<&mut T> {
-        self.head.map(|node| unsafe { &mut (**node).element })
+        self.head.map(|node| unsafe { &mut (*(*node as *mut Node<T>)).element })
     }
     #[inline(always)]
     fn back_mut(&mut self) -> Option<&mut T> {
-        self.tail.map(|node| unsafe { &mut (**node).element })
+        self.tail.map(|node| unsafe { &mut (*(*node as *mut Node<T>)).element })
     }
 }
 
@@ -579,7 +579,7 @@ impl<'a, T> Iterator for IterMut<'a, T> {
             None
         } else {
             self.head.map(|node| unsafe {
-                let node = &mut **node;
+                let node = &mut *(*node as *mut Node<T>);
                 self.len -= 1;
                 self.head = node.next;
                 &mut node.element
@@ -600,7 +600,7 @@ impl<'a, T> DoubleEndedIterator for IterMut<'a, T> {
             None
         } else {
             self.tail.map(|node| unsafe {
-                let node = &mut **node;
+                let node = &mut *(*node as *mut Node<T>);
                 self.len -= 1;
                 self.tail = node.prev;
                 &mut node.element
