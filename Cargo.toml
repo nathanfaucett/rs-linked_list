@@ -11,4 +11,4 @@ repository = "https://github.com/nathanfaucett/rs-linked_list.git"
 homepage = "https://github.com/nathanfaucett/rs-linked_list"
 
 [dependencies]
-collection_traits = {git = "https://github.com/nathanfaucett/rs-collection_traits"}
+collection_traits = {git = "https://github.com/nathanfaucett/rs-collection_traits", features=["no_std"]}
