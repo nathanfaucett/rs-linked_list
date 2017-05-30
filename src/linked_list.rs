@@ -229,7 +229,7 @@ impl<T> IndexMut<usize> for LinkedList<T> {
     }
 }
 
-impl<T> Collection for LinkedList<T> {
+impl<T> CollectionMut for LinkedList<T> {
     #[inline(always)]
     fn len(&self) -> usize { self.len }
     #[inline(always)]
@@ -238,7 +238,7 @@ impl<T> Collection for LinkedList<T> {
     }
 }
 
-impl<T> Insert<usize, T> for LinkedList<T> {
+impl<T> InsertMut<usize, T> for LinkedList<T> {
     type Output = ();
 
     #[inline]
@@ -269,7 +269,7 @@ impl<T> Insert<usize, T> for LinkedList<T> {
     }
 }
 
-impl<T> Remove<usize> for LinkedList<T> {
+impl<T> RemoveMut<usize> for LinkedList<T> {
     type Output = T;
 
     #[inline]
@@ -295,7 +295,7 @@ impl<T> Remove<usize> for LinkedList<T> {
     }
 }
 
-impl<T> Deque<T> for LinkedList<T> {
+impl<T> DequeMut<T> for LinkedList<T> {
     #[inline(always)]
     fn push_front(&mut self, element: T) {
         self.push_front_node(Box::new(Node::new(element)));
@@ -330,7 +330,7 @@ impl<T> Deque<T> for LinkedList<T> {
     }
 }
 
-impl<T> Stack<T> for LinkedList<T> {
+impl<T> StackMut<T> for LinkedList<T> {
     #[inline(always)]
     fn push(&mut self, element: T) { self.push_back(element) }
     #[inline(always)]
@@ -341,7 +341,7 @@ impl<T> Stack<T> for LinkedList<T> {
     fn top_mut(&mut self) -> Option<&mut T> { self.back_mut() }
 }
 
-impl<T> Queue<T> for LinkedList<T> {
+impl<T> QueueMut<T> for LinkedList<T> {
     #[inline(always)]
     fn enqueue(&mut self, element: T) { self.push_back(element) }
     #[inline(always)]
@@ -623,5 +623,4 @@ impl<'a, T: 'a> IterableMut<'a, &'a mut T> for LinkedList<T> {
     }
 }
 
-impl<'a, T: 'a> Seq<'a, T> for LinkedList<T> {}
 impl<'a, T: 'a> SeqMut<'a, T> for LinkedList<T> {}
