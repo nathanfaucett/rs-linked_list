@@ -229,9 +229,12 @@ impl<T> IndexMut<usize> for LinkedList<T> {
     }
 }
 
-impl<T> CollectionMut for LinkedList<T> {
+impl<T> Collection for LinkedList<T> {
     #[inline(always)]
     fn len(&self) -> usize { self.len }
+}
+
+impl<T> CollectionMut for LinkedList<T> {
     #[inline(always)]
     fn clear(&mut self) {
         while let Some(_) = self.pop_front() {}
